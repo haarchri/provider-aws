@@ -57,9 +57,6 @@ spec:
                   availabilityZone:
                     description: The Availability Zone in which to create the volume.
                     type: string
-                  dryRun:
-                    description: Checks whether you have the required permissions for the action, without actually making the request, and provides an error response. If you have the required permissions, the error response is DryRunOperation. Otherwise, it is UnauthorizedOperation.
-                    type: boolean
                   encrypted:
                     description: "Indicates whether the volume should be encrypted. The effect of setting the encryption state to true depends on the volume origin (new or from a snapshot), starting encryption state, ownership, and whether encryption by default is enabled. For more information, see Encryption by default (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html#encryption-by-default) in the Amazon Elastic Compute Cloud User Guide. \n Encrypted Amazon EBS volumes must be attached to instances that support Amazon EBS encryption. For more information, see Supported instance types (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html#EBSEncryption_supported_instances)."
                     type: boolean
@@ -70,6 +67,27 @@ spec:
                   kmsKeyID:
                     description: "The identifier of the AWS Key Management Service (AWS KMS) customer master key (CMK) to use for Amazon EBS encryption. If this parameter is not specified, your AWS managed CMK for EBS is used. If KmsKeyId is specified, the encrypted state must be true. \n You can specify the CMK using any of the following: \n    * Key ID. For example, 1234abcd-12ab-34cd-56ef-1234567890ab. \n    * Key alias. For example, alias/ExampleAlias. \n    * Key ARN. For example, arn:aws:kms:us-east-1:012345678910:key/1234abcd-12ab-34cd-56ef-1234567890ab. \n    * Alias ARN. For example, arn:aws:kms:us-east-1:012345678910:alias/ExampleAlias. \n AWS authenticates the CMK asynchronously. Therefore, if you specify an ID, alias, or ARN that is not valid, the action can appear to complete, but eventually fails."
                     type: string
+                  kmsKeyIDRef:
+                    description: KMSKeyIDRef is a reference to a KMS Key used to set KMSKeyID.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                    required:
+                    - name
+                    type: object
+                  kmsKeyIDSelector:
+                    description: KMSKeyIDSelector selects a reference to a KMS Key used to set KMSKeyID.
+                    properties:
+                      matchControllerRef:
+                        description: MatchControllerRef ensures an object with the same controller reference as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels is selected.
+                        type: object
+                    type: object
                   multiAttachEnabled:
                     description: Indicates whether to enable Amazon EBS Multi-Attach. If you enable Multi-Attach, you can attach the volume to up to 16 Instances built on the Nitro System (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html#ec2-nitro-instances) in the same Availability Zone. This parameter is supported with io1 and io2 volumes only. For more information, see Amazon EBS Multi-Attach (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-volumes-multi.html) in the Amazon Elastic Compute Cloud User Guide.
                     type: boolean
@@ -159,7 +177,7 @@ spec:
                   attachments:
                     description: Information about the volume attachments.
                     items:
-                      description: VolumeAttachment
+                      description: VolumeAttachment struct is missing via ack code-generator
                       properties:
                         attachTime:
                           description: The time stamp when the attachment initiated. time.Time needs to be converted to apimachinery/metav1.Time otherwise there is no DeepCopy support

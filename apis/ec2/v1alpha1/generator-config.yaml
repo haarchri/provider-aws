@@ -56,3 +56,11 @@ ignore:
     - VpnConnectionRoute
     - VpnConnection
     - VpnGateway
+  field_paths:
+    - CreateVolumeInput.DryRun
+resources:
+  Volume:
+    exceptions:
+      errors:
+        404:
+          code: InvalidVolume.NotFound

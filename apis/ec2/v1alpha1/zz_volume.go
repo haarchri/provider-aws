@@ -32,11 +32,6 @@ type VolumeParameters struct {
 	// The Availability Zone in which to create the volume.
 	// +kubebuilder:validation:Required
 	AvailabilityZone *string `json:"availabilityZone"`
-	// Checks whether you have the required permissions for the action, without
-	// actually making the request, and provides an error response. If you have
-	// the required permissions, the error response is DryRunOperation. Otherwise,
-	// it is UnauthorizedOperation.
-	DryRun *bool `json:"dryRun,omitempty"`
 	// Indicates whether the volume should be encrypted. The effect of setting the
 	// encryption state to true depends on the volume origin (new or from a snapshot),
 	// starting encryption state, ownership, and whether encryption by default is

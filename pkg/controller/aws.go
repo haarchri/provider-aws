@@ -55,6 +55,7 @@ import (
 	"github.com/crossplane/provider-aws/pkg/controller/ec2/routetable"
 	"github.com/crossplane/provider-aws/pkg/controller/ec2/securitygroup"
 	"github.com/crossplane/provider-aws/pkg/controller/ec2/subnet"
+	"github.com/crossplane/provider-aws/pkg/controller/ec2/volume"
 	"github.com/crossplane/provider-aws/pkg/controller/ec2/vpc"
 	"github.com/crossplane/provider-aws/pkg/controller/ec2/vpccidrblock"
 	"github.com/crossplane/provider-aws/pkg/controller/ecr/repository"
@@ -175,6 +176,7 @@ func Setup(mgr ctrl.Manager, l logging.Logger, rl workqueue.RateLimiter, poll ti
 		resolverendpoint.SetupResolverEndpoint,
 		resolverrule.SetupResolverRule,
 		kafkacluster.SetupCluster,
+		volume.SetupVolume,
 	} {
 		if err := setup(mgr, l, rl, poll); err != nil {
 			return err

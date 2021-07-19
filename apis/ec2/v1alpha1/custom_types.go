@@ -17,13 +17,22 @@ limitations under the License.
 package v1alpha1
 
 import (
+	xpv1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // CustomVolumeParameters contains the additional fields for VolumeParameters.
-type CustomVolumeParameters struct{}
+type CustomVolumeParameters struct {
+	// KMSKeyIDRef is a reference to a KMS Key used to set KMSKeyID.
+	// +optional
+	KMSKeyIDRef *xpv1.Reference `json:"kmsKeyIDRef,omitempty"`
 
-// VolumeAttachment
+	// KMSKeyIDSelector selects a reference to a KMS Key used to set KMSKeyID.
+	// +optional
+	KMSKeyIDSelector *xpv1.Selector `json:"kmsKeyIDSelector,omitempty"`
+}
+
+// VolumeAttachment struct is missing via ack code-generator
 type VolumeAttachment struct {
 	// The time stamp when the attachment initiated.
 	// time.Time needs to be converted to apimachinery/metav1.Time otherwise there is no DeepCopy support

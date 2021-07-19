@@ -34,10 +34,6 @@ import (
 func GenerateDescribeVolumesInput(cr *svcapitypes.Volume) *svcsdk.DescribeVolumesInput {
 	res := &svcsdk.DescribeVolumesInput{}
 
-	if cr.Spec.ForProvider.DryRun != nil {
-		res.SetDryRun(*cr.Spec.ForProvider.DryRun)
-	}
-
 	return res
 }
 
@@ -178,9 +174,6 @@ func GenerateCreateVolumeInput(cr *svcapitypes.Volume) *svcsdk.CreateVolumeInput
 	if cr.Spec.ForProvider.AvailabilityZone != nil {
 		res.SetAvailabilityZone(*cr.Spec.ForProvider.AvailabilityZone)
 	}
-	if cr.Spec.ForProvider.DryRun != nil {
-		res.SetDryRun(*cr.Spec.ForProvider.DryRun)
-	}
 	if cr.Spec.ForProvider.Encrypted != nil {
 		res.SetEncrypted(*cr.Spec.ForProvider.Encrypted)
 	}
@@ -203,29 +196,29 @@ func GenerateCreateVolumeInput(cr *svcapitypes.Volume) *svcsdk.CreateVolumeInput
 		res.SetSnapshotId(*cr.Spec.ForProvider.SnapshotID)
 	}
 	if cr.Spec.ForProvider.TagSpecifications != nil {
-		f9 := []*svcsdk.TagSpecification{}
-		for _, f9iter := range cr.Spec.ForProvider.TagSpecifications {
-			f9elem := &svcsdk.TagSpecification{}
-			if f9iter.ResourceType != nil {
-				f9elem.SetResourceType(*f9iter.ResourceType)
+		f8 := []*svcsdk.TagSpecification{}
+		for _, f8iter := range cr.Spec.ForProvider.TagSpecifications {
+			f8elem := &svcsdk.TagSpecification{}
+			if f8iter.ResourceType != nil {
+				f8elem.SetResourceType(*f8iter.ResourceType)
 			}
-			if f9iter.Tags != nil {
-				f9elemf1 := []*svcsdk.Tag{}
-				for _, f9elemf1iter := range f9iter.Tags {
-					f9elemf1elem := &svcsdk.Tag{}
-					if f9elemf1iter.Key != nil {
-						f9elemf1elem.SetKey(*f9elemf1iter.Key)
+			if f8iter.Tags != nil {
+				f8elemf1 := []*svcsdk.Tag{}
+				for _, f8elemf1iter := range f8iter.Tags {
+					f8elemf1elem := &svcsdk.Tag{}
+					if f8elemf1iter.Key != nil {
+						f8elemf1elem.SetKey(*f8elemf1iter.Key)
 					}
-					if f9elemf1iter.Value != nil {
-						f9elemf1elem.SetValue(*f9elemf1iter.Value)
+					if f8elemf1iter.Value != nil {
+						f8elemf1elem.SetValue(*f8elemf1iter.Value)
 					}
-					f9elemf1 = append(f9elemf1, f9elemf1elem)
+					f8elemf1 = append(f8elemf1, f8elemf1elem)
 				}
-				f9elem.SetTags(f9elemf1)
+				f8elem.SetTags(f8elemf1)
 			}
-			f9 = append(f9, f9elem)
+			f8 = append(f8, f8elem)
 		}
-		res.SetTagSpecifications(f9)
+		res.SetTagSpecifications(f8)
 	}
 	if cr.Spec.ForProvider.Throughput != nil {
 		res.SetThroughput(*cr.Spec.ForProvider.Throughput)
@@ -241,9 +234,6 @@ func GenerateCreateVolumeInput(cr *svcapitypes.Volume) *svcsdk.CreateVolumeInput
 func GenerateModifyVolumeInput(cr *svcapitypes.Volume) *svcsdk.ModifyVolumeInput {
 	res := &svcsdk.ModifyVolumeInput{}
 
-	if cr.Spec.ForProvider.DryRun != nil {
-		res.SetDryRun(*cr.Spec.ForProvider.DryRun)
-	}
 	if cr.Spec.ForProvider.IOPS != nil {
 		res.SetIops(*cr.Spec.ForProvider.IOPS)
 	}
@@ -270,9 +260,6 @@ func GenerateModifyVolumeInput(cr *svcapitypes.Volume) *svcsdk.ModifyVolumeInput
 func GenerateDeleteVolumeInput(cr *svcapitypes.Volume) *svcsdk.DeleteVolumeInput {
 	res := &svcsdk.DeleteVolumeInput{}
 
-	if cr.Spec.ForProvider.DryRun != nil {
-		res.SetDryRun(*cr.Spec.ForProvider.DryRun)
-	}
 	if cr.Status.AtProvider.VolumeID != nil {
 		res.SetVolumeId(*cr.Status.AtProvider.VolumeID)
 	}
@@ -283,5 +270,5 @@ func GenerateDeleteVolumeInput(cr *svcapitypes.Volume) *svcsdk.DeleteVolumeInput
 // IsNotFound returns whether the given error is of type NotFound or not.
 func IsNotFound(err error) bool {
 	awsErr, ok := err.(awserr.Error)
-	return ok && awsErr.Code() == "UNKNOWN"
+	return ok && awsErr.Code() == "InvalidVolume.NotFound"
 }
