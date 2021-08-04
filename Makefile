@@ -6,7 +6,7 @@ PROJECT_REPO := github.com/crossplane/$(PROJECT_NAME)
 
 PLATFORMS ?= linux_amd64 linux_arm64
 
-CODE_GENERATOR_COMMIT ?= cac5654b7bb64c8f754ad9af01799ef70d9541b6
+CODE_GENERATOR_COMMIT ?= 0427c5e954760c1a3e5a81a22bc70ba4b2173c72
 GENERATED_SERVICES="apigatewayv2,cloudfront,dynamodb,efs,kafka,kms,lambda,rds,secretsmanager,servicediscovery,sfn"
 
 # kind-related versions
