@@ -772,6 +772,17 @@ func (in *FunctionObservation) DeepCopyInto(out *FunctionObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.Layers != nil {
+		in, out := &in.Layers, &out.Layers
+		*out = make([]*Layer, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(Layer)
+				(*in).DeepCopyInto(*out)
+			}
+		}
+	}
 	if in.MasterARN != nil {
 		in, out := &in.MasterARN, &out.MasterARN
 		*out = new(string)
@@ -882,17 +893,6 @@ func (in *FunctionParameters) DeepCopyInto(out *FunctionParameters) {
 		in, out := &in.KMSKeyARN, &out.KMSKeyARN
 		*out = new(string)
 		**out = **in
-	}
-	if in.Layers != nil {
-		in, out := &in.Layers, &out.Layers
-		*out = make([]*string, len(*in))
-		for i := range *in {
-			if (*in)[i] != nil {
-				in, out := &(*in)[i], &(*out)[i]
-				*out = new(string)
-				**out = **in
-			}
-		}
 	}
 	if in.MemorySize != nil {
 		in, out := &in.MemorySize, &out.MemorySize

@@ -251,14 +251,26 @@ func (e *external) Create(ctx context.Context, mg cpresource.Managed) (managed.E
 		cr.Status.AtProvider.LastUpdateStatusReasonCode = nil
 	}
 	if resp.Layers != nil {
-		f15 := []*string{}
+		f15 := []*svcapitypes.Layer{}
 		for _, f15iter := range resp.Layers {
-			var f15elem string
+			f15elem := &svcapitypes.Layer{}
+			if f15iter.Arn != nil {
+				f15elem.ARN = f15iter.Arn
+			}
+			if f15iter.CodeSize != nil {
+				f15elem.CodeSize = f15iter.CodeSize
+			}
+			if f15iter.SigningJobArn != nil {
+				f15elem.SigningJobARN = f15iter.SigningJobArn
+			}
+			if f15iter.SigningProfileVersionArn != nil {
+				f15elem.SigningProfileVersionARN = f15iter.SigningProfileVersionArn
+			}
 			f15 = append(f15, f15elem)
 		}
-		cr.Spec.ForProvider.Layers = f15
+		cr.Status.AtProvider.Layers = f15
 	} else {
-		cr.Spec.ForProvider.Layers = nil
+		cr.Status.AtProvider.Layers = nil
 	}
 	if resp.MasterArn != nil {
 		cr.Status.AtProvider.MasterARN = resp.MasterArn
