@@ -1,0 +1,294 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
+  name: firewallpolicies.networkfirewall.aws.crossplane.io
+spec:
+  group: networkfirewall.aws.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - aws
+    kind: FirewallPolicy
+    listKind: FirewallPolicyList
+    plural: firewallpolicies
+    singular: firewallpolicy
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: FirewallPolicy is the Schema for the FirewallPolicies API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: FirewallPolicySpec defines the desired state of FirewallPolicy
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                description: FirewallPolicyParameters defines the desired state of
+                  FirewallPolicy
+                properties:
+                  description:
+                    description: A description of the firewall policy.
+                    type: string
+                  dryRun:
+                    description: "Indicates whether you want Network Firewall to just
+                      check the validity of the request, rather than run the request.
+                      \n If set to TRUE, Network Firewall checks whether the request
+                      can run successfully, but doesn't actually make the requested
+                      changes. The call returns the value that the request would return
+                      if you ran it with dry run set to FALSE, but doesn't make additions
+                      or changes to your resources. This option allows you to make
+                      sure that you have the required permissions to run the request
+                      and that your request parameters are valid. \n If set to FALSE,
+                      Network Firewall makes the requested changes to your resources."
+                    type: boolean
+                  firewallPolicy:
+                    description: The rule groups and policy actions to use in the
+                      firewall policy.
+                    properties:
+                      statefulRuleGroupReferences:
+                        items:
+                          properties:
+                            resourceARN:
+                              type: string
+                          type: object
+                        type: array
+                      statelessCustomActions:
+                        items:
+                          properties:
+                            actionDefinition:
+                              description: A custom action to use in stateless rule
+                                actions settings. This is used in CustomAction.
+                              properties:
+                                publishMetricAction:
+                                  description: Stateless inspection criteria that
+                                    publishes the specified metrics to Amazon CloudWatch
+                                    for the matching packet. This setting defines
+                                    a CloudWatch dimension value to be published.
+                                  properties:
+                                    dimensions:
+                                      items:
+                                        properties:
+                                          value:
+                                            type: string
+                                        type: object
+                                      type: array
+                                  type: object
+                              type: object
+                            actionName:
+                              type: string
+                          type: object
+                        type: array
+                      statelessDefaultActions:
+                        items:
+                          type: string
+                        type: array
+                      statelessFragmentDefaultActions:
+                        items:
+                          type: string
+                        type: array
+                      statelessRuleGroupReferences:
+                        items:
+                          properties:
+                            priority:
+                              format: int64
+                              type: integer
+                            resourceARN:
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  firewallPolicyName:
+                    description: The descriptive name of the firewall policy. You
+                      can't change the name of a firewall policy after you create
+                      it.
+                    type: string
+                  region:
+                    description: Region is which region the FirewallPolicy will be
+                      created.
+                    type: string
+                  tags:
+                    description: The key:value pairs to associate with the resource.
+                    items:
+                      properties:
+                        key:
+                          type: string
+                        value:
+                          type: string
+                      type: object
+                    type: array
+                required:
+                - firewallPolicy
+                - firewallPolicyName
+                - region
+                type: object
+              providerConfigRef:
+                default:
+                  name: default
+                description: ProviderConfigReference specifies how the provider that
+                  will be used to create, observe, update, and delete this managed
+                  resource should be configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              providerRef:
+                description: 'ProviderReference specifies the provider that will be
+                  used to create, observe, update, and delete this managed resource.
+                  Deprecated: Please use ProviderConfigReference, i.e. `providerConfigRef`'
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: WriteConnectionSecretToReference specifies the namespace
+                  and name of a Secret to which any connection details for this managed
+                  resource should be written. Connection details frequently include
+                  the endpoint, username, and password required to connect to the
+                  managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+          status:
+            description: FirewallPolicyStatus defines the observed state of FirewallPolicy.
+            properties:
+              atProvider:
+                description: FirewallPolicyObservation defines the observed state
+                  of FirewallPolicy
+                properties:
+                  firewallPolicyResponse:
+                    description: The high-level properties of a firewall policy. This,
+                      along with the FirewallPolicy, define the policy. You can retrieve
+                      all objects for a firewall policy by calling DescribeFirewallPolicy.
+                    properties:
+                      description:
+                        type: string
+                      firewallPolicyARN:
+                        type: string
+                      firewallPolicyID:
+                        type: string
+                      firewallPolicyName:
+                        type: string
+                      firewallPolicyStatus:
+                        type: string
+                      tags:
+                        items:
+                          properties:
+                            key:
+                              type: string
+                            value:
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  updateToken:
+                    description: "A token used for optimistic locking. Network Firewall
+                      returns a token to your requests that access the firewall policy.
+                      The token marks the state of the policy resource at the time
+                      of the request. \n To make changes to the policy, you provide
+                      the token in your request. Network Firewall uses the token to
+                      ensure that the policy hasn't changed since you last retrieved
+                      it. If it has changed, the operation fails with an InvalidTokenException.
+                      If this happens, retrieve the firewall policy again to get a
+                      current copy of it with current token. Reapply your changes
+                      as needed, then try the operation again using the new token."
+                    type: string
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
