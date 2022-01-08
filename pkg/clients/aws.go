@@ -298,7 +298,11 @@ func UseProviderSecretAssumeRole(ctx context.Context, data []byte, profile, regi
 	}))
 
 	stsSvc := sts.NewFromConfig(config)
-	stsAssume := stscreds.NewAssumeRoleProvider(stsSvc, StringValue(pc.Spec.AssumeRoleARN))
+	stsAssume := stscreds.NewAssumeRoleProvider(
+		stsSvc,
+		StringValue(pc.Spec.AssumeRoleARN),
+		func(opt *stscreds.AssumeRoleOptions) { opt.RoleSessionName = pc.Name },
+	)
 	config.Credentials = aws.NewCredentialsCache(stsAssume)
 
 	return &config, err
@@ -320,6 +324,7 @@ func UsePodServiceAccountAssumeRole(ctx context.Context, _ []byte, _, region str
 			stscreds.NewAssumeRoleProvider(
 				stsclient,
 				StringValue(pc.Spec.AssumeRoleARN),
+				func(opt *stscreds.AssumeRoleOptions) { opt.RoleSessionName = pc.Name },
 			)),
 		),
 	)
@@ -411,7 +416,11 @@ func UseProviderSecretV1AssumeRole(ctx context.Context, data []byte, pc *v1beta1
 	}
 
 	stsSvc := sts.NewFromConfig(config)
-	stsAssume := stscreds.NewAssumeRoleProvider(stsSvc, StringValue(pc.Spec.AssumeRoleARN))
+	stsAssume := stscreds.NewAssumeRoleProvider(
+		stsSvc,
+		StringValue(pc.Spec.AssumeRoleARN),
+		func(opt *stscreds.AssumeRoleOptions) { opt.RoleSessionName = pc.Name },
+	)
 	config.Credentials = aws.NewCredentialsCache(stsAssume)
 
 	v2creds, err := config.Credentials.Retrieve(ctx)
@@ -475,6 +484,7 @@ func UsePodServiceAccountV1AssumeRole(ctx context.Context, _ []byte, pc *v1beta1
 			stscreds.NewAssumeRoleProvider(
 				stsclient,
 				StringValue(pc.Spec.AssumeRoleARN),
+				func(opt *stscreds.AssumeRoleOptions) { opt.RoleSessionName = pc.Name },
 			)),
 		),
 	)
@@ -485,6 +495,7 @@ func UsePodServiceAccountV1AssumeRole(ctx context.Context, _ []byte, pc *v1beta1
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to retrieve credentials")
 	}
+
 	v1creds := credentialsv1.NewStaticCredentials(
 		v2creds.AccessKeyID,
 		v2creds.SecretAccessKey,
