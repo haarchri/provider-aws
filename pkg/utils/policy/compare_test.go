@@ -78,6 +78,15 @@ func TestCompareRawPolicies(t *testing.T) {
 				equals: false,
 			},
 		},
+		"Action Equal": {
+			args: args{
+				policyA: policyUnmarshalActionArraySingleString,
+				policyB: policyUnmarshalActionSingleString,
+			},
+			want: want{
+				equals: true,
+			},
+		},
 	}
 
 	for name, tc := range cases {

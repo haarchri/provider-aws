@@ -14,6 +14,12 @@ var (
 
 	//go:embed testdata/UnmarshalArrays.json
 	policyUnmarshalArrays string
+
+	//go:embed testdata/UnmarshalActionArraySingleString.json
+	policyUnmarshalActionArraySingleString string
+
+	//go:embed testdata/UnmarshalActionSingleString.json
+	policyUnmarshalActionSingleString string
 )
 
 func TestParsePolicy(t *testing.T) {
@@ -127,6 +133,56 @@ func TestParsePolicy(t *testing.T) {
 										"s3.amazonaws.com",
 									},
 								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"UnmarshalActionArraySingleString.json": {
+			args: args{
+				rawPolicy: policyUnmarshalActionArraySingleString,
+			},
+			want: want{
+				policy: &Policy{
+					Version: "2012-10-17",
+					Statements: StatementList{
+						{
+							Effect: "Allow",
+							Principal: &Principal{
+								Service: NewStringOrSet(
+									"apigateway.amazonaws.com",
+									"lambda.amazonaws.com",
+									"states.amazonaws.com",
+								),
+							},
+							Action: StringOrArray{
+								"sts:AssumeRole",
+							},
+						},
+					},
+				},
+			},
+		},
+		"UnmarshalActionSingleString": {
+			args: args{
+				rawPolicy: policyUnmarshalActionSingleString,
+			},
+			want: want{
+				policy: &Policy{
+					Version: "2012-10-17",
+					Statements: StatementList{
+						{
+							Effect: "Allow",
+							Principal: &Principal{
+								Service: NewStringOrSet(
+									"apigateway.amazonaws.com",
+									"lambda.amazonaws.com",
+									"states.amazonaws.com",
+								),
+							},
+							Action: StringOrArray{
+								"sts:AssumeRole",
 							},
 						},
 					},
